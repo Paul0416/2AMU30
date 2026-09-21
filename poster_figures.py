@@ -2,7 +2,7 @@
 into standalone images so each can sit in its own poster band.
 
 Reuses the functions from cluster_comparison.py.
-Outputs: fig-coincide.png (panel a), fig-limitation.png (panel b).
+Outputs: fig-coincide.pdf (panel a), fig-limitation.pdf (panel b).
 """
 
 import numpy as np
@@ -16,7 +16,7 @@ plt.rcParams.update({"font.size": 12, "axes.titlesize": 13})
 
 C = np.array([[-1.0, 0.0], [1.0, 0.0]])  # the fixed centers used in the report
 
-# fig-coincide.png: membership along y=0, spread vs m, m=3 = PDC
+# fig-coincide.pdf: membership along y=0, spread vs m, m=3 = PDC
 fig, ax = plt.subplots(figsize=(6.6, 3.7))
 xs = np.linspace(-2.0, 2.0, 400)
 line = np.column_stack([xs, np.zeros_like(xs)])
@@ -30,9 +30,9 @@ ax.set_ylim(0, 1)
 ax.set_xlim(-2, 2)
 ax.legend(fontsize=10, loc="upper right")
 fig.tight_layout()
-fig.savefig("fig-coincide.png", dpi=300, bbox_inches="tight")
+fig.savefig("fig-coincide.pdf", bbox_inches="tight")
 
-# fig-limitation.png: assignment stays 0.5 while absolute fit grows
+# fig-limitation.pdf: assignment stays 0.5 while absolute fit grows
 fig, ax = plt.subplots(figsize=(6.6, 3.7))
 ts = np.linspace(0.0, 12.0, 400)
 ray = np.column_stack([np.zeros_like(ts), ts])
@@ -45,6 +45,6 @@ ax.set_xlabel("distance $t$ from the midpoint")
 ax.set_ylabel("value")
 ax.legend(fontsize=10, loc="upper left")
 fig.tight_layout()
-fig.savefig("fig-limitation.png", dpi=300, bbox_inches="tight")
+fig.savefig("fig-limitation.pdf", bbox_inches="tight")
 
-print("wrote fig-coincide.png and fig-limitation.png")
+print("wrote fig-coincide.pdf and fig-limitation.pdf")
