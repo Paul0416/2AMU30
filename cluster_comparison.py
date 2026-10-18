@@ -1,5 +1,6 @@
 """Probabilistic D-clustering and fuzzy c-means.
-Used for Table 1 and fig-datasets.pdf and fig-comparison.pdf in the report.
+Used for Table 1 and Figure 1 (fig-comparison.pdf) in the report;
+fig-datasets.pdf was used in the midterm version.
 Dependencies: numpy, matplotlib."""
 
 import numpy as np
@@ -55,9 +56,9 @@ def table1():
     C = np.array([[-1.0, 0.0], [1.0, 0.0]])
     P = np.array([[0.0, 0.0], [0.0, 10.0]])
     p = pdc_membership(P, C)
-    u = fcm_membership(P, C, 2.0)
+    u = fcm_membership(P, C, 3.0)  # m=3, as in the report
     D = pdc_joint_distance(P, C)
-    J = fcm_contribution(P, C, 2.0)
+    J = fcm_contribution(P, C, 3.0)
     for i, name in enumerate(["x_B", "x_C"]):
         print(name, np.round(p[i], 3), np.round(u[i], 3),
               round(D[i], 3), round(J[i], 3))
@@ -84,33 +85,20 @@ def fig_datasets():
     fig.savefig("fig-datasets.pdf", bbox_inches="tight")
 
 def fig_comparison():
-    # two panels over the fixed centers c1=(-1,0), c2=(1,0)
+    # Figure 1: membership along the axis y=0 for the fixed centers
+    # c1=(-1,0), c2=(1,0); FCM with m=3 overlays PDC
     C = np.array([[-1.0, 0.0], [1.0, 0.0]])
-    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(7.2, 3.1))
-    # panel (a): membership along the axis y=0, FCM m=3 overlays PDC
+    fig, ax = plt.subplots(figsize=(3.6, 3.1))
     xs = np.linspace(-2.0, 2.0, 400)
     line = np.column_stack([xs, np.zeros_like(xs)])
-    ax1.plot(xs, pdc_membership(line, C)[:, 0], color="black", lw=2.2, label="PDC")
+    ax.plot(xs, pdc_membership(line, C)[:, 0], color="black", lw=2.2, label="PDC")
     for m, ls in zip([1.5, 2.0, 3.0, 5.0], ["-", "--", ":", "-."]):
-        ax1.plot(xs, fcm_membership(line, C, m)[:, 0], ls=ls, lw=1.3,
-                 label=f"FCM $m={m:g}$")
-    ax1.set_xlabel("position $x$ on the axis $y=0$")
-    ax1.set_ylabel("membership in cluster 1")
-    ax1.set_title("(a) fuzzifier sets sharpness; $m=3$ matches PDC", fontsize=8.5)
-    ax1.legend(fontsize=7)
-    ax1.set_ylim(0, 1)
-    # panel (b): points receding from the midpoint; assignment vs absolute fit
-    ts = np.linspace(0.0, 12.0, 400)
-    ray = np.column_stack([np.zeros_like(ts), ts])
-    ax2.plot(ts, pdc_joint_distance(ray, C), color="black", lw=2.0, label="PDC $D_i$")
-    ax2.plot(ts, fcm_contribution(ray, C, 2.0), color="C3", ls="--", lw=1.6,
-             label=r"FCM $\sum_k u_{ik}^2 d_{ik}^2$")
-    ax2.plot(ts, pdc_membership(ray, C)[:, 0], color="C0", ls=":", lw=1.4,
-             label="largest membership")
-    ax2.set_xlabel("distance $t$ from the midpoint")
-    ax2.set_ylabel("value")
-    ax2.set_title("(b) assignment stays 0.5; absolute fit grows", fontsize=8.5)
-    ax2.legend(fontsize=7)
+        ax.plot(xs, fcm_membership(line, C, m)[:, 0], ls=ls, lw=1.3,
+                label=f"FCM $m={m:g}$")
+    ax.set_xlabel("position $x$ on the axis $y=0$")
+    ax.set_ylabel("membership in cluster 1")
+    ax.legend(fontsize=7)
+    ax.set_ylim(0, 1)
     fig.tight_layout()
     fig.savefig("fig-comparison.pdf", bbox_inches="tight")
 
